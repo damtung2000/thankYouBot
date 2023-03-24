@@ -1,5 +1,5 @@
 const { App, ExpressReceiver } = require('@slack/bolt');
-const { parseRequestBody, generateReceiverEvent, isUrlVerificationRequest } = require('../utils/utils');
+// const { parseRequestBody, generateReceiverEvent, isUrlVerificationRequest } = require('../utils/utils');
 
 const expressReceiver = new ExpressReceiver({
   signingSecret: `${process.env.SLACK_SIGNING_SECRET}`,
@@ -12,25 +12,32 @@ const app = new App({
   receiver: expressReceiver,
 });
 
-app.message(async ({ say }) => {
-  await say('Hello, world!');
+app.message('hello', async ({ message, say }) => {
+  // say() sends a message to the channel where the event was triggered
+  await say(`Hey there <@${message.user}>!`);
 });
 
-exports.handler = async (event, context) => {
-  const payload = parseRequestBody(event.body, event.headers['content-type']);
+(async () => {
+  // Start your app
+  await app.start(process.env.PORT || 3000);
 
-  if (isUrlVerificationRequest(payload)) {
-    return {
-      statusCode: 200,
-      body: payload?.challenge,
-    };
-  }
+  console.log('⚡️ Bolt app is running!');
+})();
+// exports.handler = async (event, context) => {
+//   const payload = parseRequestBody(event.body, event.headers['content-type']);
 
-  const slackEvent = generateReceiverEvent(payload);
-  await app.processEvent(slackEvent);
+//   if (isUrlVerificationRequest(payload)) {
+//     return {
+//       statusCode: 200,
+//       body: payload?.challenge,
+//     };
+//   }
 
-  return {
-    statusCode: 200,
-    body: '',
-  };
-};
+//   const slackEvent = generateReceiverEvent(payload);
+//   await app.processEvent(slackEvent);
+
+//   return {
+//     statusCode: 200,
+//     body: '',
+//   };
+// };
