@@ -23,7 +23,7 @@ function parseRequestBody(stringBody, contentType) {
 
 function generateReceiverEvent(payload) {
   return {
-    body: payload,
+    body: payload.payload ? JSON.parse(payload.payload) : payload,
     ack: async (response) => {
       return {
         statusCode: 200,
