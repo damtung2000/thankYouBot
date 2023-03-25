@@ -35,6 +35,7 @@ app.command('/thanks', async ({ command, ack, respond }) => {
 
   await respond({
     text,
+    response_type: 'in_channel',
   });
 });
 app.error(({ error, logger, context, body }) => {
