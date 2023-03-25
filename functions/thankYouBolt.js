@@ -37,10 +37,6 @@ app.command('/thanks', async ({ command, ack, respond }) => {
 app.error(({ error, logger, context, body }) => {
   // Log the error using the logger passed into Bolt
   logger.error(error);
-  app.client.chat.postEphemeral({
-    text: error.toString(),
-    thread_ts: body?.message_ts || null,
-  });
 });
 
 exports.handler = async (event, context) => {
