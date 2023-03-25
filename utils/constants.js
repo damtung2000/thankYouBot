@@ -110,4 +110,7 @@ const LANGUAGES = {
   zu: 'Zulu',
 };
 
+const USER_ID_REGEX = /@\w+/;
+
 exports.LANGUAGES = LANGUAGES;
+exports.USER_ID_REGEX = USER_ID_REGEX;

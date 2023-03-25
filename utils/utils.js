@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const { USER_ID_REGEX } = require('./constants');
 
 function parseRequestBody(stringBody, contentType) {
   try {
@@ -42,6 +43,12 @@ function isUrlVerificationRequest(payload) {
   return false;
 }
 
+function parseUserId(text) {
+  const matches = text.match(USER_ID_REGEX);
+  const userId = (matches[0] || '').replace('@', '');
+  return userId;
+}
+
 const generateRawBody = (event) => {
   return String(event.body).replace(/'/g, "'").replace(/\\'/g, "'");
 };
@@ -66,3 +73,4 @@ exports.generateReceiverEvent = generateReceiverEvent;
 exports.isUrlVerificationRequest = isUrlVerificationRequest;
 exports.generateRawBody = generateRawBody;
 exports.verifySignature = verifySignature;
+exports.parseUserId = parseUserId;

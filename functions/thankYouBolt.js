@@ -1,5 +1,5 @@
 const { App, ExpressReceiver } = require('@slack/bolt');
-const { parseRequestBody, generateReceiverEvent, isUrlVerificationRequest } = require('../utils/utils');
+const { parseRequestBody, generateReceiverEvent, isUrlVerificationRequest, parseUserId } = require('../utils/utils');
 const { translateThanks } = require('../utils/translate');
 
 const expressReceiver = new ExpressReceiver({
@@ -30,8 +30,11 @@ app.shortcut('thanks_message_shortcut', async ({ shortcut, ack, logger, body }) 
 
 app.command('/thanks', async ({ command, ack, respond }) => {
   await ack();
-  respond({
-    text: await translateThanks(),
+  const userId = parseUserId(command.text);
+  const text = await translateThanks({ user: userId });
+
+  await respond({
+    text,
   });
 });
 app.error(({ error, logger, context, body }) => {
