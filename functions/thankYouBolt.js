@@ -28,6 +28,12 @@ app.shortcut('thanks', async ({ shortcut, ack, logger, body }) => {
   }
 });
 
+app.command('/thanks', async ({ command, ack, respond }) => {
+  await ack();
+  respond({
+    text: await translateThanks(),
+  });
+});
 app.error(({ error, logger, context, body }) => {
   // Log the error using the logger passed into Bolt
   logger.error(error);
