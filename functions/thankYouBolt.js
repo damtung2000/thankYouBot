@@ -14,7 +14,7 @@ const app = new App({
   extendedErrorHandler: true,
 });
 
-app.shortcut('thanks', async ({ shortcut, ack, logger, body }) => {
+app.shortcut('thanks_message_shortcut', async ({ shortcut, ack, logger, body }) => {
   try {
     await ack();
     app.client.chat.postMessage({
