@@ -1,4 +1,5 @@
 'use strict';
+//Legacy
 const { translateThanks } = require('../utils/translate');
 const { generateRawBody, verifySignature } = require('../utils/utils');
 
