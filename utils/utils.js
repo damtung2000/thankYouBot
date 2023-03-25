@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 function parseRequestBody(stringBody, contentType) {
   try {
     if (!stringBody) {
@@ -40,6 +42,27 @@ function isUrlVerificationRequest(payload) {
   return false;
 }
 
+const generateRawBody = (event) => {
+  return String(event.body).replace(/'/g, "'").replace(/\\'/g, "'");
+};
+
+const verifySignature = (req) => {
+  const signature = req.headers['x-slack-signature'];
+  const timestamp = req.headers['x-slack-request-timestamp'];
+  console.log('sig: ', signature);
+  console.log('timestamp:', timestamp);
+  const hmac = crypto.createHmac('sha256', process.env.SLACK_SIGNING_SECRET);
+  const [version, challenge] = signature.split('=');
+
+  hmac.update(`${version}:${timestamp}:${req.rawBody}`);
+  const response = hmac.digest('hex');
+  console.log('hex: ', response);
+  console.log('hah: ', challenge);
+  return response === challenge;
+};
+
 exports.parseRequestBody = parseRequestBody;
 exports.generateReceiverEvent = generateReceiverEvent;
 exports.isUrlVerificationRequest = isUrlVerificationRequest;
+exports.generateRawBody = generateRawBody;
+exports.verifySignature = verifySignature;
